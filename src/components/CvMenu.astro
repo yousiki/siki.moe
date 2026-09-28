@@ -36,16 +36,14 @@ const { id, label = 'CV', align = 'end', size = 'md', class: className } = Astro
   </summary>
 
   <ul class="cv__panel">
-    {
-      profile.cv.map((edition) => (
-        <li>
-          <a href={edition.href} target="_blank" rel="noopener" class="cv__item">
-            <span class="cv__label">{edition.label}</span>
-            <Icon name="arrow" size={13} class="cv__arrow" />
-          </a>
-        </li>
-      ))
-    }
+    {profile.cv.map((edition) => (
+      <li>
+        <a href={edition.href} target="_blank" rel="noopener" class="cv__item">
+          <span class="cv__label">{edition.label}</span>
+          <Icon name="arrow" size={13} class="cv__arrow" />
+        </a>
+      </li>
+    ))}
   </ul>
 </details>
 

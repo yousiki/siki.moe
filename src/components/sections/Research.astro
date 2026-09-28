@@ -13,16 +13,14 @@ import { emphasise } from '../../utils/text';
   <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-7 xl:col-span-6">
       <div class="space-y-6">
-        {
-          profile.bio.map((paragraph) => (
-            <p
-              class="text-muted text-lg leading-[1.75] sm:text-xl"
-              data-reveal
-              data-reveal-group="bio"
-              set:html={emphasise(paragraph)}
-            />
-          ))
-        }
+        {profile.bio.map((paragraph) => (
+          <p
+            class="text-muted text-lg leading-[1.75] sm:text-xl"
+            data-reveal
+            data-reveal-group="bio"
+            set:html={emphasise(paragraph)}
+          />
+        ))}
       </div>
     </div>
 
@@ -41,9 +39,7 @@ import { emphasise } from '../../utils/text';
           <div class="portrait__scrim" aria-hidden="true"></div>
         </div>
 
-        <figcaption
-          class="text-faint mt-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 font-mono text-[0.7rem] tracking-[0.16em] uppercase"
-        >
+        <figcaption class="text-faint mt-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 font-mono text-[0.7rem] tracking-[0.16em] uppercase">
           <span>{profile.name}</span>
           <span class="normal-case">{profile.portrait.caption}</span>
         </figcaption>

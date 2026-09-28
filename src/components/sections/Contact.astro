@@ -19,7 +19,9 @@ import { profile } from '../../data/profile';
         data-reveal
       >
         <span class="say-hello__line">Say</span>
-        <span class="say-hello__line italic">hello<span class="text-gradient">.</span></span>
+        <span class="say-hello__line italic">
+          hello<span class="text-gradient">.</span>
+        </span>
       </a>
 
       <div class="mt-10 flex flex-wrap items-center gap-3" data-reveal style="--reveal-delay:120ms">
@@ -37,25 +39,23 @@ import { profile } from '../../data/profile';
     </div>
 
     <ul class="lg:col-span-4 lg:col-start-9">
-      {
-        profile.socials.map((social) => (
-          <li class="border-line border-b first:border-t" data-reveal data-reveal-group="socials">
-            <a
-              href={social.href}
-              target={social.icon === 'mail' ? undefined : '_blank'}
-              rel="noopener"
-              class="social group flex items-center gap-4 py-4"
-            >
-              <Icon name={social.icon} size={16} class="text-faint transition-colors" />
-              <span class="min-w-0 flex-1">
-                <span class="block text-sm sm:text-base">{social.label}</span>
-                <span class="text-faint block truncate font-mono text-xs">{social.handle}</span>
-              </span>
-              <Icon name="arrow" size={15} class="social__arrow text-faint" />
-            </a>
-          </li>
-        ))
-      }
+      {profile.socials.map((social) => (
+        <li class="border-line border-b first:border-t" data-reveal data-reveal-group="socials">
+          <a
+            href={social.href}
+            target={social.icon === 'mail' ? undefined : '_blank'}
+            rel="noopener"
+            class="social group flex items-center gap-4 py-4"
+          >
+            <Icon name={social.icon} size={16} class="text-faint transition-colors" />
+            <span class="min-w-0 flex-1">
+              <span class="block text-sm sm:text-base">{social.label}</span>
+              <span class="text-faint block truncate font-mono text-xs">{social.handle}</span>
+            </span>
+            <Icon name="arrow" size={15} class="social__arrow text-faint" />
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 </section>

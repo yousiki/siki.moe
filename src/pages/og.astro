@@ -29,7 +29,9 @@ import { SITE_DESCRIPTION } from '../data/site';
         </div>
 
         <div>
-          <h1 class="card__name">Siqi <em>Yang</em></h1>
+          <h1 class="card__name">
+            Siqi <em>Yang</em>
+          </h1>
           <p class="card__role">{SITE_DESCRIPTION}</p>
         </div>
 
@@ -37,7 +39,9 @@ import { SITE_DESCRIPTION } from '../data/site';
           {
             /* Research areas, not the side interests — this card is what gets
                pasted into a chat when someone shares the page. */
-            profile.researchAreas.slice(0, 3).map((area) => <span class="card__tag">{area}</span>)
+            profile.researchAreas.slice(0, 3).map((area) => (
+              <span class="card__tag">{area}</span>
+            ))
           }
         </div>
       </div>
@@ -49,7 +53,6 @@ import { SITE_DESCRIPTION } from '../data/site';
       const canvas = document.querySelector<HTMLCanvasElement>('[data-spike-field]');
       if (canvas) initSpikeField(canvas);
     </script>
-
     <style>
       body {
         margin: 0;

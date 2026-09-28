@@ -11,27 +11,25 @@ import { profile } from '../../data/profile';
   />
 
   <div class="grid gap-5 md:grid-cols-3">
-    {
-      profile.interests.map((interest) => (
-        <article
-          class="focus-card"
-          data-tilt="4"
-          data-reveal
-          data-reveal-group="interests"
-          data-cursor-target
-        >
-          <div class="focus-card__spot" aria-hidden="true" />
-          <div class="relative flex h-full flex-col">
-            <span class="eyebrow tabular-nums">{interest.index}</span>
-            <h3 class="font-display mt-6 text-2xl leading-tight sm:text-3xl">{interest.title}</h3>
-            <p class="text-muted mt-4 text-sm leading-relaxed sm:text-base">{interest.blurb}</p>
-            <div class="mt-auto pt-8" aria-hidden="true">
-              <span class="focus-card__rule" />
-            </div>
+    {profile.interests.map((interest) => (
+      <article
+        class="focus-card"
+        data-tilt="4"
+        data-reveal
+        data-reveal-group="interests"
+        data-cursor-target
+      >
+        <div class="focus-card__spot" aria-hidden="true" />
+        <div class="relative flex h-full flex-col">
+          <span class="eyebrow tabular-nums">{interest.index}</span>
+          <h3 class="font-display mt-6 text-2xl leading-tight sm:text-3xl">{interest.title}</h3>
+          <p class="text-muted mt-4 text-sm leading-relaxed sm:text-base">{interest.blurb}</p>
+          <div class="mt-auto pt-8" aria-hidden="true">
+            <span class="focus-card__rule" />
           </div>
-        </article>
-      ))
-    }
+        </div>
+      </article>
+    ))}
   </div>
 </section>
 

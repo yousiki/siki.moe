@@ -9,18 +9,16 @@ import { profile } from '../../data/profile';
   <canvas
     data-spike-field
     class="spike-canvas pointer-events-auto absolute inset-0 -z-10 h-full w-full"
-    aria-hidden="true"></canvas>
+    aria-hidden="true"
+  ></canvas>
 
   <div
     class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(115%_70%_at_45%_10%,transparent_30%,var(--paper)_95%)]"
     aria-hidden="true"
-  >
-  </div>
+  ></div>
 
-  {
-    /* Vertical rule — fills the right margin the way a print grid would.
-      Decorative: the same voice runs through the about section. */
-  }
+  {/* Vertical rule — fills the right margin the way a print grid would.
+      Decorative: the same voice runs through the about section. */}
   <div class="hero-margin" aria-hidden="true">
     <span class="hero-margin__rule"></span>
     <span class="hero-margin__text">{profile.tagline}</span>
@@ -29,48 +27,47 @@ import { profile } from '../../data/profile';
 
   <div class="hero__container container-page flex flex-1 flex-col justify-between">
     {/* ── status strip ─────────────────────────────────────────────── */}
-    <div
-      class="text-faint flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.7rem] tracking-[0.16em] uppercase"
-    >
+    <div class="text-faint flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[0.7rem] tracking-[0.16em] uppercase">
       <span class="flex items-center gap-2">
         <span class="relative flex size-1.5">
           <span
             class="bg-accent-2 absolute inline-flex size-full rounded-full opacity-75"
-            style="animation: pulse-ring 2.4s var(--ease-out-quint) infinite"></span>
+            style="animation: pulse-ring 2.4s var(--ease-out-quint) infinite"
+          ></span>
           <span class="bg-accent-2 relative inline-flex size-1.5 rounded-full"></span>
         </span>
         {profile.location}
       </span>
       <span class="flex items-center gap-2">
         <span class="text-faint/70">Local</span>
-        <span class="text-muted tabular-nums" data-clock={profile.timezone}>--:--:--</span>
+        <span class="text-muted tabular-nums" data-clock={profile.timezone}>
+          --:--:--
+        </span>
       </span>
     </div>
 
     {/* ── name block ───────────────────────────────────────────────── */}
     <div class="hero__middle flex flex-col gap-6 py-12 md:py-16">
-      {
-        /* No `font-mono` here: the string is pure Han, so the mono family never
+      {/* No `font-mono` here: the string is pure Han, so the mono family never
           applied to it — the kai face answers for it instead. Set larger and
           more widely tracked than a caption would be, so it reads as the
-          superscription to the Latin name rather than a label above it. */
-      }
+          superscription to the Latin name rather than a label above it. */}
       <p class="name-local text-muted text-lg tracking-[0.4em] sm:text-xl">
         <SplitText text={profile.nameLocal} baseDelay={120} />
       </p>
 
-      <h1
-        class="hero__name font-display text-[clamp(3.4rem,15vw,11.5rem)] leading-[0.82] tracking-[-0.03em]"
-      >
-        <span class="block italic"><SplitText text="Siqi" baseDelay={220} /></span>
-        <span class="block pl-[0.08em] italic"><SplitText text="Yang" baseDelay={380} /></span>
+      <h1 class="hero__name font-display text-[clamp(3.4rem,15vw,11.5rem)] leading-[0.82] tracking-[-0.03em]">
+        <span class="block italic">
+          <SplitText text="Siqi" baseDelay={220} />
+        </span>
+        <span class="block pl-[0.08em] italic">
+          <SplitText text="Yang" baseDelay={380} />
+        </span>
       </h1>
 
-      {
-        /* The largest element on the page, and therefore the LCP element — which
+      {/* The largest element on the page, and therefore the LCP element — which
            is why it animates through `hero-intro` below rather than `data-reveal`
-           like everything else. See the note on that rule. */
-      }
+           like everything else. See the note on that rule. */}
       <div class="hero-intro mt-2">
         <p class="text-muted max-w-md text-base leading-relaxed sm:text-lg">
           {profile.role} at the{' '}
@@ -78,23 +75,21 @@ import { profile } from '../../data/profile';
             href={profile.affiliationHref}
             target="_blank"
             rel="noopener"
-            class="link-underline text-ink">Camera&nbsp;Intelligence&nbsp;Lab</a
-          >, Peking&nbsp;University.
-          <br />
-          I work on{' '}
+            class="link-underline text-ink"
+          >
+            Camera&nbsp;Intelligence&nbsp;Lab
+          </a>
+          , Peking&nbsp;University.
+          <br />I work on{' '}
           <span class="rotator" data-rotator>
-            {
-              profile.rotatingWords.map((word) => (
-                <span class="rotator__item text-gradient font-medium" data-rotator-item>
-                  {word}.
-                </span>
-              ))
-            }
-            {
-              /* Reserves the widest word so the sentence never reflows mid-cycle.
+            {profile.rotatingWords.map((word) => (
+              <span class="rotator__item text-gradient font-medium" data-rotator-item>
+                {word}.
+              </span>
+            ))}
+            {/* Reserves the widest word so the sentence never reflows mid-cycle.
                 The full stop travels with each word, so the slack it leaves over
-                is trailing whitespace at the end of a line. */
-            }
+                is trailing whitespace at the end of a line. */}
             <span class="rotator__sizer" aria-hidden="true">
               {`${profile.rotatingWords.reduce((a, b) => (a.length > b.length ? a : b))}.`}
             </span>
@@ -110,21 +105,19 @@ import { profile } from '../../data/profile';
       style="--reveal-delay:720ms"
     >
       <ul class="hero__socials flex flex-wrap items-center gap-x-5 gap-y-3">
-        {
-          profile.socials.map((social) => (
-            <li>
-              <a
-                href={social.href}
-                target={social.icon === 'mail' ? undefined : '_blank'}
-                rel="noopener"
-                class="text-muted hover:text-ink group inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase transition-colors duration-300"
-              >
-                <Icon name={social.icon} size={14} />
-                <span class="link-underline">{social.label}</span>
-              </a>
-            </li>
-          ))
-        }
+        {profile.socials.map((social) => (
+          <li>
+            <a
+              href={social.href}
+              target={social.icon === 'mail' ? undefined : '_blank'}
+              rel="noopener"
+              class="text-muted hover:text-ink group inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase transition-colors duration-300"
+            >
+              <Icon name={social.icon} size={14} />
+              <span class="link-underline">{social.label}</span>
+            </a>
+          </li>
+        ))}
       </ul>
 
       <a
@@ -132,9 +125,7 @@ import { profile } from '../../data/profile';
         class="hero__scroll text-faint hover:text-ink group inline-flex items-center gap-3 self-start font-mono text-[0.7rem] tracking-[0.2em] uppercase transition-colors sm:self-auto"
       >
         Scroll
-        <span
-          class="border-line grid size-9 place-items-center rounded-full border transition-transform duration-500 group-hover:translate-y-1"
-        >
+        <span class="border-line grid size-9 place-items-center rounded-full border transition-transform duration-500 group-hover:translate-y-1">
           <Icon name="arrow-down" size={14} />
         </span>
       </a>

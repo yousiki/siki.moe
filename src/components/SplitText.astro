@@ -14,15 +14,13 @@ const characters = [...text];
 ---
 
 <span style={`--char-base:${baseDelay}ms`} aria-label={text}>
-  {
-    characters.map((char, index) =>
-      char === ' ' ? (
-        <span class="char char--space" style={`--char-index:${index}`} aria-hidden="true" />
-      ) : (
-        <span class="char" style={`--char-index:${index}`} aria-hidden="true">
-          {char}
-        </span>
-      ),
-    )
-  }
+  {characters.map((char, index) =>
+    char === ' ' ? (
+      <span class="char char--space" style={`--char-index:${index}`} aria-hidden="true" />
+    ) : (
+      <span class="char" style={`--char-index:${index}`} aria-hidden="true">
+        {char}
+      </span>
+    ),
+  )}
 </span>

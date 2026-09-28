@@ -15,11 +15,9 @@ const authors = authorSegments(publication.authors, SELF);
 const Tag = publication.href ? 'a' : 'div';
 ---
 
-{
-  /* An extra row is collapsed by CSS from the first paint, so it carries no
+{/* An extra row is collapsed by CSS from the first paint, so it carries no
     `data-reveal`: a zero-height element never satisfies the reveal observer's
-    threshold, and it would stay at `opacity: 0` after being expanded. */
-}
+    threshold, and it would stay at `opacity: 0` after being expanded. */}
 <li
   class:list={['pub', extra && 'pub--extra']}
   data-reveal={extra ? undefined : true}
@@ -37,14 +35,12 @@ const Tag = publication.href ? 'a' : 'div';
       <span class="pub__title font-display">{publication.title}</span>
 
       <span class="pub__authors">
-        {
-          authors.map((author, index) => (
-            <>
-              {index > 0 && <span class="text-faint">, </span>}
-              <span class={author.isSelf ? 'text-ink font-medium' : undefined}>{author.name}</span>
-            </>
-          ))
-        }
+        {authors.map((author, index) => (
+          <>
+            {index > 0 && <span class="text-faint">, </span>}
+            <span class={author.isSelf ? 'text-ink font-medium' : undefined}>{author.name}</span>
+          </>
+        ))}
       </span>
 
       <span class="pub__meta">
@@ -53,13 +49,11 @@ const Tag = publication.href ? 'a' : 'div';
       </span>
     </span>
 
-    {
-      publication.href && (
-        <span class="pub__arrow" aria-hidden="true">
-          <Icon name="arrow" size={15} />
-        </span>
-      )
-    }
+    {publication.href && (
+      <span class="pub__arrow" aria-hidden="true">
+        <Icon name="arrow" size={15} />
+      </span>
+    )}
   </Tag>
 </li>
 

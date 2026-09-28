@@ -47,6 +47,11 @@ jobs:
       # deploy needs the repository as well as the build output.
       - uses: actions/checkout@v7
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+
       # bun.lock makes wrangler-action reach for bun whether or not
       # `packageManager` says so, and the runner has no bun until this runs.
       - name: Set up Bun

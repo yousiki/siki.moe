@@ -9,51 +9,49 @@ import { rangeLabel } from '../../utils/text';
   <SectionHeading index="03 — Path" title="Where I have been." />
 
   <ol class="timeline" data-timeline>
-    {
-      profile.timeline.map((entry) => (
-        <li class="timeline__item" data-reveal data-reveal-group="path">
-          <div class="timeline__marker" aria-hidden="true">
-            <span class="timeline__dot" />
+    {profile.timeline.map((entry) => (
+      <li class="timeline__item" data-reveal data-reveal-group="path">
+        <div class="timeline__marker" aria-hidden="true">
+          <span class="timeline__dot" />
+        </div>
+
+        <div class="timeline__body">
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span class="text-faint font-mono text-xs tracking-[0.14em] tabular-nums">
+              {rangeLabel(entry.start, entry.end)}
+            </span>
+            <span class="border-line text-faint rounded-full border px-2 py-0.5 font-mono text-[0.6rem] tracking-[0.14em] uppercase">
+              {entry.kind}
+            </span>
           </div>
 
-          <div class="timeline__body">
-            <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <span class="text-faint font-mono text-xs tracking-[0.14em] tabular-nums">
-                {rangeLabel(entry.start, entry.end)}
-              </span>
-              <span class="border-line text-faint rounded-full border px-2 py-0.5 font-mono text-[0.6rem] tracking-[0.14em] uppercase">
-                {entry.kind}
-              </span>
-            </div>
-
-            <h3 class="font-display mt-2 text-2xl leading-snug sm:text-3xl">
-              {entry.href ? (
-                <a
-                  href={entry.href}
-                  target="_blank"
-                  rel="noopener"
-                  class="link-underline inline-flex items-center gap-2"
-                >
-                  {entry.organisation}
-                  <Icon name="arrow" size={14} class="text-faint" />
-                </a>
-              ) : (
-                entry.organisation
-              )}
-            </h3>
-
-            <p class="text-muted mt-1 text-sm sm:text-base">
-              {entry.role}
-              <span class="text-faint"> · {entry.location}</span>
-            </p>
-
-            {entry.detail && (
-              <p class="text-faint mt-2 max-w-xl text-sm leading-relaxed">{entry.detail}</p>
+          <h3 class="font-display mt-2 text-2xl leading-snug sm:text-3xl">
+            {entry.href ? (
+              <a
+                href={entry.href}
+                target="_blank"
+                rel="noopener"
+                class="link-underline inline-flex items-center gap-2"
+              >
+                {entry.organisation}
+                <Icon name="arrow" size={14} class="text-faint" />
+              </a>
+            ) : (
+              entry.organisation
             )}
-          </div>
-        </li>
-      ))
-    }
+          </h3>
+
+          <p class="text-muted mt-1 text-sm sm:text-base">
+            {entry.role}
+            <span class="text-faint"> · {entry.location}</span>
+          </p>
+
+          {entry.detail && (
+            <p class="text-faint mt-2 max-w-xl text-sm leading-relaxed">{entry.detail}</p>
+          )}
+        </div>
+      </li>
+    ))}
   </ol>
 </section>
 

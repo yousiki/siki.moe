@@ -20,16 +20,16 @@ reduced motion.
 
 ## Stack
 
-|           |                                                                                                                                             |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework | [Astro 7](https://astro.build) — fully static output, zero client framework                                                                 |
-| Styling   | [Tailwind CSS 4](https://tailwindcss.com) with a CSS-variable palette                                                                       |
-| Animation | [Motion](https://motion.dev), [Lenis](https://lenis.darkroom.engineering), CSS, and a hand-written canvas simulation                        |
-| Type      | Instrument Serif · Geist · Geist Mono, self-hosted via Fontsource; the italic and CJK faces are subset in-repo                              |
-| Language  | TypeScript everywhere — including `astro.config.ts`, `eslint.config.ts` and `prettier.config.ts`. There is no `.js` file in this repository |
-| Runtime   | [Bun](https://bun.com) for installs, scripts, and the local static server                                                                   |
-| Tests     | Vitest (units). Playwright is kept for screenshots only — there is no browser suite                                                         |
-| Hosting   | Cloudflare Workers, assets-only — the custom domain lives in `wrangler.jsonc`                                                               |
+|           |                                                                                                                                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework | [Astro 7.3](https://astro.build) — fully static output, zero client framework                                                                                                                                 |
+| Styling   | [Tailwind CSS 4](https://tailwindcss.com) with a CSS-variable palette                                                                                                                                         |
+| Animation | [Motion](https://motion.dev), [Lenis](https://lenis.darkroom.engineering), CSS, and a hand-written canvas simulation                                                                                          |
+| Type      | Instrument Serif · Geist · Geist Mono, self-hosted via Fontsource; the italic and CJK faces are subset in-repo                                                                                                |
+| Language  | TypeScript 7 for `.ts` checks, with TypeScript 6 API compatibility for Astro and ESLint — including `astro.config.ts`, `eslint.config.ts` and `prettier.config.ts`. There is no `.js` file in this repository |
+| Runtime   | [Bun 1.4](https://bun.com) for installs, scripts, and the local static server; Node.js 26 for Node-based tools                                                                                                |
+| Tests     | Vitest 5 (units). Playwright is kept for screenshots only — there is no browser suite                                                                                                                         |
+| Hosting   | Cloudflare Workers, assets-only — the custom domain lives in `wrangler.jsonc`                                                                                                                                 |
 
 The page renders and reads completely without JavaScript. What it does ship is
 split along the guards the code already had, so nobody downloads an animation
@@ -40,6 +40,9 @@ library that could not have run for them:
 | `prefers-reduced-motion: reduce` | entry + spike canvas | **5.9 kB**  |
 | Touch device                     | + Lenis              | **11.3 kB** |
 | Pointer-fine desktop             | + Motion             | 32.5 kB     |
+
+These transfer measurements are from the August 2026 build, before the September
+dependency refresh; rerun browser profiling before treating them as current.
 
 The entry module is 3.9 kB; Motion (21.2 kB) and Lenis (5.4 kB) are `import()`ed
 _after_ `hasFinePointer()` and `prefersReducedMotion()` have decided whether they
@@ -53,6 +56,10 @@ blocking path shrinks 7.5×, and phones drop by two thirds.
 
 ## Getting started
 
+Use the versions pinned in `.bun-version` (Bun 1.4.2) and `.node-version`
+(Node.js 26.10.0). CI reads both files. Node follows the latest stable Current
+release, including major updates; Bun remains the package manager and script runner.
+
 ```bash
 bun install
 bun run dev          # http://localhost:4321
@@ -60,26 +67,50 @@ bun run dev          # http://localhost:4321
 
 ### Everyday commands
 
-| Command                | What it does                                        |
-| ---------------------- | --------------------------------------------------- |
-| `bun run dev`          | Dev server with HMR                                 |
-| `bun run build`        | Static build into `dist/`                           |
-| `bun run serve`        | Serve `dist/` exactly as it will ship               |
-| `bun run check`        | `astro check` — types across `.ts` and `.astro`     |
-| `bun run lint`         | ESLint 10, flat config                              |
-| `bun run format`       | Prettier                                            |
-| `bun run test`         | Vitest unit tests                                   |
-| `bun run shots`        | Write review screenshots to `screenshots/`          |
-| `bun run assets`       | Regenerate `public/og.png` and the icons            |
-| `bun run cv`           | Pull the CV PDFs into `public/cv/`                  |
-| `bun run fonts:italic` | Rebuild the italic subset after italic text changes |
-| `bun run verify`       | Everything above that can fail CI, in order         |
+| Command                | What it does                                          |
+| ---------------------- | ----------------------------------------------------- |
+| `bun run dev`          | Dev server with HMR                                   |
+| `bun run build`        | Static build into `dist/`                             |
+| `bun run serve`        | Serve `dist/` exactly as it will ship                 |
+| `bun run check`        | `astro check` plus native TypeScript 7 checks         |
+| `bun run check:ts`     | Native TypeScript 7 check for `.ts` files             |
+| `bun run outdated`     | Compare installed dependencies with registry releases |
+| `bun run lint`         | ESLint 10, flat config                                |
+| `bun run format`       | Prettier                                              |
+| `bun run test`         | Vitest unit tests                                     |
+| `bun run shots`        | Write review screenshots to `screenshots/`            |
+| `bun run assets`       | Regenerate `public/og.png` and the icons              |
+| `bun run cv`           | Pull the CV PDFs into `public/cv/`                    |
+| `bun run fonts:italic` | Rebuild the italic subset after italic text changes   |
+| `bun run verify`       | Everything above that can fail CI, in order           |
 
 Before the first `shots` or `assets` run, which drive a real browser:
 
 ```bash
 bunx playwright install chromium
 ```
+
+## Keeping the toolchain current
+
+Direct dependencies were checked against npm's stable `latest` tags on
+2026-09-28. Astro is 7.3.5, TypeScript is 7.0.2, Vitest is 5.0.2,
+Prettier's Astro plugin is 1.1.0, and Wrangler is 4.142.0. Tailwind CSS 4.3.3
+was already the latest stable release. GitHub Actions dependencies already
+track their latest stable major tags. Dependabot now checks packages and Actions
+daily, with related packages grouped for review.
+
+TypeScript uses the [official side-by-side setup](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60):
+`@typescript/native` aliases TypeScript 7 and provides `tsc`; `typescript` aliases
+`@typescript/typescript6`, which supplies the compiler API still needed by
+`astro check` and `typescript-eslint`. `bun run check` runs both. Astro template
+checking therefore remains on the compatibility API, while the native compiler
+checks the project's TypeScript files. `baseUrl` has been removed; path aliases
+are explicitly relative. The Astro editor integration still needs TypeScript 6.
+
+For another update, run `bun run outdated`, update package ranges and `bun.lock`,
+then run `bun run verify` and `bun audit`. Update `.bun-version`, `packageManager`,
+`engines`, and `.node-version` together when moving runtimes. Changes to animation,
+markup, or content should also be checked with `bun run shots` after building.
 
 ## Editing the content
 

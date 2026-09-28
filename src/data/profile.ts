@@ -284,6 +284,26 @@ export const profile: Profile = {
 
   publications: [
     {
+      title: 'Programmable World Model',
+      authors: [
+        'Zheng-Hui Huang',
+        'Guixu Lin',
+        'Jiacheng Lin',
+        'Yi-Chuan Huang',
+        'Ruihan Yu',
+        'Muyao Niu',
+        SELF,
+        'Yu-Lun Liu',
+        'Yung-Yu Chuang',
+        'Kaipeng Zhang',
+        'Zhixiang Wang',
+      ],
+      venue: 'arXiv preprint',
+      year: 2026,
+      href: 'https://arxiv.org/abs/2609.10540',
+      selected: false,
+    },
+    {
       title: 'MASS: Multiplayer World Models with Authoritative Shared State',
       authors: [
         'Ziqi Cai',

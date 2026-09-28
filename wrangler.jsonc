@@ -9,7 +9,7 @@
    * dashboard setting nobody remembers clicking. Pages has no equivalent field.
    */
   "name": "siki-moe",
-  "compatibility_date": "2026-08-01",
+  "compatibility_date": "2026-09-28",
   "assets": {
     "directory": "./dist",
     // Astro emits 404.html; without this, Workers answers with its own bare 404.

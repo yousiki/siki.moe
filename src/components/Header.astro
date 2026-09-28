@@ -51,8 +51,7 @@ const barSections = sections.filter((section) => section.bar);
   class="bg-accent fixed inset-x-0 top-0 z-50 h-[2px] origin-left scale-x-0"
   data-scroll-progress
   aria-hidden="true"
->
-</div>
+></div>
 
 <header
   class="fixed inset-x-0 top-0 z-40 transition-[background-color,backdrop-filter,border-color] duration-500 data-scrolled:border-b data-scrolled:backdrop-blur-xl"
@@ -82,20 +81,18 @@ const barSections = sections.filter((section) => section.bar);
     </a>
 
     <ul class="hidden items-center gap-1 md:flex">
-      {
-        barSections.map((section) => (
-          <li>
-            <a
-              href={`#${section.id}`}
-              data-section-link
-              aria-label={section.short ? section.label : undefined}
-              class="text-muted hover:text-ink relative rounded-full px-3 py-1.5 font-mono text-xs tracking-wider whitespace-nowrap uppercase transition-colors duration-300"
-            >
-              {section.short ?? section.label}
-            </a>
-          </li>
-        ))
-      }
+      {barSections.map((section) => (
+        <li>
+          <a
+            href={`#${section.id}`}
+            data-section-link
+            aria-label={section.short ? section.label : undefined}
+            class="text-muted hover:text-ink relative rounded-full px-3 py-1.5 font-mono text-xs tracking-wider whitespace-nowrap uppercase transition-colors duration-300"
+          >
+            {section.short ?? section.label}
+          </a>
+        </li>
+      ))}
     </ul>
 
     <div class="flex items-center gap-2">
@@ -140,51 +137,43 @@ const barSections = sections.filter((section) => section.bar);
   role="dialog"
   class="menu md:hidden"
 >
-  {
-    /* `min-h-full` rather than `h-full`: the index centres itself in the window
+  {/* `min-h-full` rather than `h-full`: the index centres itself in the window
       while it fits, and grows past it — scrolling, rather than cropping its ends
-      — on a short viewport. */
-  }
+      — on a short viewport. */}
   <ul class="container-page flex min-h-full flex-col justify-center gap-2 py-6">
-    {
-      sections.map((section, index) => (
-        <li class="menu__item border-line border-b" style={`--menu-index:${index}`}>
-          <a
-            href={`#${section.id}`}
-            class="flex items-baseline gap-5 py-4 transition-colors duration-300"
-          >
-            {/* Fixed width so the unnumbered `About` row leaves the column
+    {sections.map((section, index) => (
+      <li class="menu__item border-line border-b" style={`--menu-index:${index}`}>
+        <a
+          href={`#${section.id}`}
+          class="flex items-baseline gap-5 py-4 transition-colors duration-300"
+        >
+          {/* Fixed width so the unnumbered `About` row leaves the column
                 standing instead of pulling its label left. */}
-            <span class="text-faint inline-block w-4 font-mono text-xs tabular-nums">
-              {section.index}
-            </span>
-            <span class="font-display text-4xl leading-tight">{section.label}</span>
-          </a>
-        </li>
-      ))
-    }
-    {
-      /* Already inside an overlay, so the three editions are simply listed —
-        a nested disclosure would be one more tap for no gain. */
-    }
+          <span class="text-faint inline-block w-4 font-mono text-xs tabular-nums">
+            {section.index}
+          </span>
+          <span class="font-display text-4xl leading-tight">{section.label}</span>
+        </a>
+      </li>
+    ))}
+    {/* Already inside an overlay, so the three editions are simply listed —
+        a nested disclosure would be one more tap for no gain. */}
     <li class="menu__item pt-8" style={`--menu-index:${sections.length}`}>
       <span class="eyebrow block">Curriculum Vitae</span>
       <ul class="mt-4 flex flex-wrap gap-2">
-        {
-          profile.cv.map((edition) => (
-            <li>
-              <a
-                href={edition.href}
-                target="_blank"
-                rel="noopener"
-                class="border-line inline-flex items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs tracking-[0.1em]"
-              >
-                {edition.label}
-                <Icon name="arrow" size={13} />
-              </a>
-            </li>
-          ))
-        }
+        {profile.cv.map((edition) => (
+          <li>
+            <a
+              href={edition.href}
+              target="_blank"
+              rel="noopener"
+              class="border-line inline-flex items-center gap-2 rounded-full border px-4 py-2 font-mono text-xs tracking-[0.1em]"
+            >
+              {edition.label}
+              <Icon name="arrow" size={13} />
+            </a>
+          </li>
+        ))}
       </ul>
     </li>
   </ul>

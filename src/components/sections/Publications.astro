@@ -14,21 +14,17 @@ const scholar = profile.socials.find((s) => s.icon === 'scholar');
     lead={`${publicationsByYear.length} papers across CVPR, ICCV, ECCV, NeurIPS, SIGGRAPH Asia and TPAMI.`}
   />
 
-  {
-    /* One list, newest first, whether or not it is expanded: the unselected rows
+  {/* One list, newest first, whether or not it is expanded: the unselected rows
       are collapsed where they belong in the order rather than appended after it,
-      so pressing the toggle never restarts the years from the top. */
-  }
+      so pressing the toggle never restarts the years from the top. */}
   <ul id="all-publications" class="border-line border-t" data-disclosure-panel>
-    {
-      publicationsByYear.map((publication) => (
-        <PublicationRow
-          publication={publication}
-          extra={!publication.selected}
-          group={publication.selected ? 'pubs' : undefined}
-        />
-      ))
-    }
+    {publicationsByYear.map((publication) => (
+      <PublicationRow
+        publication={publication}
+        extra={!publication.selected}
+        group={publication.selected ? 'pubs' : undefined}
+      />
+    ))}
   </ul>
 
   <div class="mt-10 flex flex-wrap items-center gap-4" data-reveal>
@@ -44,22 +40,21 @@ const scholar = profile.socials.find((s) => s.icon === 'scholar');
       <span data-disclosure-label>Show all {publicationsByYear.length}</span>
       <span
         class="bg-faint size-1 rounded-full transition-colors group-hover:bg-[var(--accent)]"
-        aria-hidden="true"></span>
+        aria-hidden="true"
+      ></span>
     </button>
 
-    {
-      scholar && (
-        <a
-          href={scholar.href}
-          target="_blank"
-          rel="noopener"
-          class="publications__action text-muted hover:text-ink inline-flex items-center gap-2 font-mono text-xs tracking-[0.14em] uppercase transition-colors"
-        >
-          <span class="link-underline">Google Scholar</span>
-          <Icon name="arrow" size={13} />
-        </a>
-      )
-    }
+    {scholar && (
+      <a
+        href={scholar.href}
+        target="_blank"
+        rel="noopener"
+        class="publications__action text-muted hover:text-ink inline-flex items-center gap-2 font-mono text-xs tracking-[0.14em] uppercase transition-colors"
+      >
+        <span class="link-underline">Google Scholar</span>
+        <Icon name="arrow" size={13} />
+      </a>
+    )}
   </div>
 </section>
 
