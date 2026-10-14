@@ -490,7 +490,7 @@ export const profile: Profile = {
       ],
       venue: 'CVPR',
       year: 2023,
-      href: 'https://openaccess.thecvf.com/content/CVPR2023/html/Yang_Complementary_Intrinsics_From_Neural_Radiance_Fields_and_CNNs_for_Outdoor_Scene_Relighting_CVPR_2023_paper.html',
+      href: 'https://openaccess.thecvf.com/content/CVPR2023/html/Yang_Complementary_Intrinsics_From_Neural_Radiance_Fields_and_CNNs_for_Outdoor_CVPR_2023_paper.html',
       note: '* equal contribution',
       selected: true,
     },

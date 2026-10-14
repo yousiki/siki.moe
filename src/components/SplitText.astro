@@ -2,6 +2,11 @@
 /**
  * Splits a string into per-character spans at build time so the staggered
  * entrance costs no layout shift and degrades to plain text without JS.
+ *
+ * The animated characters are hidden from assistive technology, and the word is
+ * carried by a visually hidden copy instead. An `aria-label` on the wrapper would
+ * not do: a bare `<span>` has no role that accepts one, so screen readers drop
+ * it, and the hero's `<h1>` was announced as an empty heading.
  */
 interface Props {
   text: string;
@@ -13,12 +18,13 @@ const { text, baseDelay = 0 } = Astro.props;
 const characters = [...text];
 ---
 
-<span style={`--char-base:${baseDelay}ms`} aria-label={text}>
+<span class="sr-only">{text}</span>
+<span style={`--char-base:${baseDelay}ms`} aria-hidden="true">
   {characters.map((char, index) =>
     char === ' ' ? (
-      <span class="char char--space" style={`--char-index:${index}`} aria-hidden="true" />
+      <span class="char char--space" style={`--char-index:${index}`} />
     ) : (
-      <span class="char" style={`--char-index:${index}`} aria-hidden="true">
+      <span class="char" style={`--char-index:${index}`}>
         {char}
       </span>
     ),

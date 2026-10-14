@@ -8,15 +8,16 @@ import { SITE_LOCALE } from '../data/site';
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={SITE_LOCALE} data-theme="dark">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead title={title} description={description} noindex={noindex} />
   </head>
   <body class="grain antialiased">
     <a

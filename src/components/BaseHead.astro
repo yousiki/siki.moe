@@ -27,9 +27,11 @@ import { profile } from '../data/profile';
 interface Props {
   title?: string | undefined;
   description?: string | undefined;
+  /** Keep the page out of search results, and give it no canonical URL to index. */
+  noindex?: boolean | undefined;
 }
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, noindex = false } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).href;
 const ogImage = new URL(SITE_OG_IMAGE, Astro.site ?? SITE_URL).href;
@@ -81,13 +83,17 @@ const personSchema = {
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="author" content={profile.name} />
-<link rel="canonical" href={canonical} />
+{
+  /* The 404 page is served at whatever URL failed, so a canonical would name a
+     `/404/` that nothing links to — and invite a crawler to index it. */
+  noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />
+}
 
 <meta property="og:type" content="profile" />
 <meta property="og:site_name" content={profile.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={canonical} />
+{!noindex && <meta property="og:url" content={canonical} />}
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
