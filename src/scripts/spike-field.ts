@@ -95,6 +95,20 @@ const mixRgb = (a: Rgb, b: Rgb, t: number): Rgb => ({
 const sampleRamp = (palette: Palette, t: number): Rgb =>
   t < 0.5 ? mixRgb(palette.cool, palette.mid, t * 2) : mixRgb(palette.mid, palette.warm, t * 2 - 1);
 
+/**
+ * Steps in the precomputed ramp. Mixing a colour, formatting an `rgba()` string
+ * and having the canvas parse it back again was the bulk of a frame — hundreds of
+ * times per frame, for a ramp only a few dozen shades of which are distinguishable
+ * at dot size. The opacity moves to `globalAlpha`, so the strings never change.
+ */
+const RAMP_STEPS = 64;
+
+const buildRamp = (palette: Palette): string[] =>
+  Array.from({ length: RAMP_STEPS }, (_, i) => {
+    const { r, g, b } = sampleRamp(palette, i / (RAMP_STEPS - 1));
+    return `rgb(${r},${g},${b})`;
+  });
+
 /** Deterministic pseudo-random in [0,1) — keeps the layout stable across reloads. */
 const hashNoise = (i: number): number => {
   const s = Math.sin(i * 127.1 + 311.7) * 43758.5453;
@@ -115,7 +129,7 @@ export const initSpikeField = (canvas: HTMLCanvasElement): void => {
   const ctx = context;
   const sources = createSources();
 
-  let palette = readPalette();
+  let ramp = buildRamp(readPalette());
   let cols = 0;
   let rows = 0;
   let cell = CELL_SIZE_DESKTOP;
@@ -195,6 +209,7 @@ export const initSpikeField = (canvas: HTMLCanvasElement): void => {
   };
 
   const draw = (dt: number): void => {
+    ctx.globalAlpha = 1;
     ctx.clearRect(0, 0, width, height);
 
     const decay = Math.exp(-dt / DECAY_TAU);
@@ -225,10 +240,10 @@ export const initSpikeField = (canvas: HTMLCanvasElement): void => {
         if (a < 0.02) continue;
 
         const intensity = clamp(l * 0.62, 0, 1);
-        const { r, g, b } = sampleRamp(palette, intensity);
         const size = 1.1 + a * 1.9 + intensity * 1.2;
 
-        ctx.fillStyle = `rgba(${r},${g},${b},${(a * (0.28 + intensity * 0.62)).toFixed(3)})`;
+        ctx.globalAlpha = a * (0.28 + intensity * 0.62);
+        ctx.fillStyle = ramp[Math.round(intensity * (RAMP_STEPS - 1))] ?? '';
         ctx.beginPath();
         ctx.arc(
           px + (jitter[i * 2] ?? 0),
@@ -289,7 +304,7 @@ export const initSpikeField = (canvas: HTMLCanvasElement): void => {
   };
 
   const onThemeChange = (): void => {
-    palette = readPalette();
+    ramp = buildRamp(readPalette());
   };
 
   const onVisibility = (): void => {

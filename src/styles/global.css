@@ -52,7 +52,9 @@
   --raised: #101014;
   --ink: #f3f1ed;
   --muted: #9b9aa5;
-  --faint: #5a5964;
+  /* The quietest text colour, and still text: 4.5:1 against both --paper and
+     --raised (WCAG AA). It used to be #5a5964, at 2.9:1. */
+  --faint: #7d7c87;
   --line: rgb(255 255 255 / 9%);
   --line-strong: rgb(255 255 255 / 18%);
 
@@ -75,7 +77,8 @@
   --raised: #fffdf9;
   --ink: #14131a;
   --muted: #56545f;
-  --faint: #9c99a4;
+  /* 4.6:1 on --paper, 5.1:1 on --raised. Previously #9c99a4, at 2.5:1. */
+  --faint: #6f6c77;
   --line: rgb(20 18 28 / 12%);
   --line-strong: rgb(20 18 28 / 22%);
 
