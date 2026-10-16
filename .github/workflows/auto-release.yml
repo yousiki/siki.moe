@@ -1,0 +1,89 @@
+name: Auto release
+
+# Ships the week's dependency updates without anyone having to cut a release.
+#
+# Every Tuesday, after Monday's Dependabot pull requests have been merged by
+# ci.yml, this publishes a patch release of `main` — but only when everything
+# since the latest release was merged from Dependabot. A change a person merged
+# is never shipped from here: `main` is allowed to hold work that is not ready
+# for siki.moe yet, so once one is waiting, releasing is back in human hands
+# (and that release carries the pending dependency updates with it).
+#
+# A release created with GITHUB_TOKEN does not fire `release: published`, so the
+# deploy is started explicitly by dispatching release.yml at the new tag.
+
+on:
+  schedule:
+    - cron: '0 2 * * 2' # Tuesday 10:00 Asia/Shanghai
+  workflow_dispatch:
+
+concurrency:
+  group: auto-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Release dependency updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Decide whether to release
+        id: plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          latest="$(gh release view --json tagName --jq .tagName)"
+          commits="$(git rev-list "$latest..HEAD")"
+          if [ -z "$commits" ]; then
+            echo "Nothing merged since $latest." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          others="$(git log --format='%h %an %s' "$latest..HEAD" | grep -v ' dependabot\[bot\] ' || true)"
+          if [ -n "$others" ]; then
+            {
+              echo "Skipped: these commits since $latest were not merged from Dependabot,"
+              echo "so the next release is left to a person."
+              echo
+              echo '```'
+              echo "$others"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if ! printf '%s' "$latest" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Latest release $latest is not vMAJOR.MINOR.PATCH"
+            exit 1
+          fi
+          IFS=. read -r major minor patch <<< "${latest#v}"
+          echo "tag=v$major.$minor.$((patch + 1))" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release
+        if: steps.plan.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.plan.outputs.tag }}
+          SHA: ${{ steps.plan.outputs.sha }}
+        run: |
+          gh release create "$TAG" --target "$SHA" \
+            --title "$TAG — Dependency updates" --generate-notes
+          echo "Published $TAG at $SHA." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Deploy
+        if: steps.plan.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.plan.outputs.tag }}
+        run: gh workflow run release.yml --ref "$TAG" -f tag="$TAG"

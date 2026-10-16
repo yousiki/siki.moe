@@ -29,10 +29,12 @@ jobs:
     name: Upload preview version
     needs: verify
     # A pull request from a fork cannot read the Cloudflare secrets, so there is
-    # nothing it could upload — skip it rather than fail the run.
+    # nothing it could upload — skip it rather than fail the run. Dependabot's
+    # pull requests are in the same position: they only see Dependabot secrets.
     if: >-
       github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name == github.repository
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login != 'dependabot[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -117,3 +119,35 @@ jobs:
             echo "publishing a GitHub Release deploys to production."
           } > comment.md
           gh pr comment "$NUMBER" --edit-last --create-if-none --body-file comment.md
+
+  # Merge Dependabot's minor and patch updates once verify has passed on the
+  # exact commit it checked. A major update is left open for a human, and so is
+  # anything outside the bun ecosystem: an Actions update edits workflows, which
+  # GITHUB_TOKEN is not allowed to merge. Merging here rather than with
+  # `gh pr merge --auto` means no branch protection is needed to hold the merge
+  # until CI is green, because this job cannot start before verify succeeds.
+  automerge:
+    name: Merge Dependabot update
+    needs: verify
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      startsWith(github.event.pull_request.head.ref, 'dependabot/bun/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Read update metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+
+      - name: Merge
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.html_url }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: gh pr merge "$PR" --squash --match-head-commit "$HEAD"

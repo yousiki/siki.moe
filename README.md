@@ -96,8 +96,8 @@ Direct dependencies were checked against npm's stable `latest` tags on
 2026-09-28. Astro is 7.3.5, TypeScript is 7.0.2, Vitest is 5.0.2,
 Prettier's Astro plugin is 1.1.0, and Wrangler is 4.142.0. Tailwind CSS 4.3.3
 was already the latest stable release. GitHub Actions dependencies already
-track their latest stable major tags. Dependabot now checks packages and Actions
-daily, with related packages grouped for review.
+track their latest stable major tags. Dependabot checks packages and Actions
+weekly, on Monday, with related packages grouped into a few pull requests.
 
 TypeScript uses the [official side-by-side setup](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-60):
 `@typescript/native` aliases TypeScript 7 and provides `tsc`; `typescript` aliases
@@ -200,11 +200,12 @@ setting nobody remembers clicking. Pages has no equivalent field.
 GitHub Actions does the deploying — not Workers Builds, which must stay
 disconnected from this repository or the two will publish over each other.
 
-| Trigger                  | Workflow      | Command                    | Result                                |
-| ------------------------ | ------------- | -------------------------- | ------------------------------------- |
-| Pull request             | `ci.yml`      | `wrangler versions upload` | `pr-<n>-siki-moe.yousiki.workers.dev` |
-| Push to `main`           | `ci.yml`      | `wrangler versions upload` | `main-siki-moe.yousiki.workers.dev`   |
-| GitHub Release published | `release.yml` | `wrangler deploy`          | `siki.moe`                            |
+| Trigger                  | Workflow           | Command                    | Result                                |
+| ------------------------ | ------------------ | -------------------------- | ------------------------------------- |
+| Pull request             | `ci.yml`           | `wrangler versions upload` | `pr-<n>-siki-moe.yousiki.workers.dev` |
+| Push to `main`           | `ci.yml`           | `wrangler versions upload` | `main-siki-moe.yousiki.workers.dev`   |
+| GitHub Release published | `release.yml`      | `wrangler deploy`          | `siki.moe`                            |
+| Tuesday schedule         | `auto-release.yml` | `release.yml` (dispatch)   | `siki.moe`, dependency updates only   |
 
 So **`main` no longer publishes**. Only a release does, and only through
 `wrangler deploy` — the one command that applies the `routes` entry above.
@@ -216,6 +217,14 @@ Both workflows call [`verify.yml`](.github/workflows/verify.yml) first, so a
 deploy is gated on the same format, lint, typecheck, test and build run that a
 pull request gets, and `dist/` is built exactly once and handed on as an
 artifact — the bytes that were verified are the bytes that ship.
+
+Dependency updates ship on their own. `ci.yml` merges a Dependabot pull request
+once `verify.yml` passes on it, unless it is a major update or touches GitHub
+Actions; those wait for review. Every Tuesday `auto-release.yml` publishes a
+patch release and deploys it, but only if every commit since the latest release
+was merged from Dependabot. Once a change someone merged by hand is waiting, it
+does nothing, and the next release (which carries the pending updates along) is
+yours to publish.
 
 `workflow_dispatch` on `release.yml` deploys whichever ref you pick, which is how
 the site gets restored when there is no good version to roll back to. To roll
