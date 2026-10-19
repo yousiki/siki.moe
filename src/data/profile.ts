@@ -284,6 +284,23 @@ export const profile: Profile = {
 
   publications: [
     {
+      title: 'PAWA: Panoramic Action-conditioned World Modeling for Multiple Agents',
+      authors: [
+        SELF,
+        'Yimu Wang',
+        'Ziqi Cai',
+        'Chengxuan Zhu',
+        'Shuchen Weng',
+        'Erwin Wu',
+        'Zhaofei Yu',
+        'Kaipeng Zhang',
+      ],
+      venue: 'arXiv preprint',
+      year: 2026,
+      href: 'https://arxiv.org/abs/2610.20240',
+      selected: true,
+    },
+    {
       title: 'Programmable World Model',
       authors: [
         'Zheng-Hui Huang',
