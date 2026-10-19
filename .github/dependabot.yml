@@ -1,13 +1,22 @@
 version: 2
+
+# Weekly, so a week's updates arrive together on Monday and ci.yml can merge
+# them before auto-release.yml ships them on Tuesday. Every group is limited to
+# minor and patch updates: a major update always gets its own pull request,
+# which ci.yml leaves for a human to review.
 updates:
   - package-ecosystem: bun
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: '03:00'
+      timezone: Asia/Shanghai
     open-pull-requests-limit: 10
     groups:
       astro:
         patterns: ['astro', '@astrojs/*']
+        update-types: [minor, patch]
       tooling:
         patterns:
           [
@@ -19,10 +28,25 @@ updates:
             'vitest',
             '@playwright/*',
           ]
+        update-types: [minor, patch]
       runtime:
         patterns: ['motion', 'lenis', 'tailwindcss', '@tailwindcss/*', '@fontsource*']
+        update-types: [minor, patch]
+      # Anything the groups above do not claim (wrangler, globals, ...) shares
+      # one pull request instead of opening one each.
+      other:
+        patterns: ['*']
+        update-types: [minor, patch]
 
+  # Workflow changes cannot be merged with GITHUB_TOKEN, so these stay manual;
+  # grouping them keeps it to one pull request a week.
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: '03:00'
+      timezone: Asia/Shanghai
+    groups:
+      actions:
+        patterns: ['*']

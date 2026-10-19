@@ -10,7 +10,14 @@ name: Release
 on:
   release:
     types: [published]
+  # auto-release.yml dispatches this after creating a release, because a
+  # release created with GITHUB_TOKEN does not fire `release: published`.
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag this deploy is for, used in the deployment message.
+        type: string
+        default: ''
 
 # Never cancel a production deploy in flight — an interrupted one can leave the
 # active version and the release describing it out of step.
@@ -65,7 +72,7 @@ jobs:
       - name: Resolve deployment message
         id: message
         env:
-          TAG: ${{ github.event.release.tag_name }}
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
           tag="$(printf '%s' "${TAG:-}" | tr -cd 'A-Za-z0-9._-')"
           echo "text=release ${tag:-manual} ($GITHUB_SHA)" >> "$GITHUB_OUTPUT"
