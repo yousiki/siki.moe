@@ -688,7 +688,7 @@ export const profile: Profile = {
   service: [
     {
       label: 'Conference Reviewer',
-      items: ['CVPR', 'ICCV', 'ECCV', 'NeurIPS', 'SIGGRAPH', 'ACCV', 'PRCV', 'ICIG'],
+      items: ['CVPR', 'ICCV', 'ECCV', 'NeurIPS', 'ICLR', 'SIGGRAPH', 'ACCV', 'PRCV', 'ICIG'],
     },
     { label: 'Journal Reviewer', items: ['TPAMI'] },
   ],
